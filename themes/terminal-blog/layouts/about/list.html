@@ -1,0 +1,49 @@
+{{ define "main" }}
+<div class="container">
+  <h1 class="page-title">
+    <span class="prompt">&gt;</span> whoami --verbose
+  </h1>
+
+  <div class="about">
+    <section class="about__section">
+      <h2 class="about__heading">
+        <span class="prompt">$</span> cat skills.md
+      </h2>
+      <div class="skills-grid">
+        <div class="skill-card card">
+          <h3>后端开发</h3>
+          <p>Java, Go, Spring Boot, Gin</p>
+        </div>
+        <div class="skill-card card">
+          <h3>前端开发</h3>
+          <p>Vue, React, TypeScript</p>
+        </div>
+        <div class="skill-card card">
+          <h3>AI / 架构</h3>
+          <p>分布式系统, AI Agent</p>
+        </div>
+        <div class="skill-card card">
+          <h3>DevOps</h3>
+          <p>Docker, Linux, Nginx</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="about__section">
+      <h2 class="about__heading">
+        <span class="prompt">$</span> cat contact.md
+      </h2>
+      <div class="contact-links">
+        <a href="https://github.com/your-username" target="_blank" rel="noopener" class="contact-link card">
+          <span class="contact-link__icon">📦</span>
+          <span class="contact-link__name">GitHub</span>
+        </a>
+        <a href="mailto:your@email.com" class="contact-link card">
+          <span class="contact-link__icon">📧</span>
+          <span class="contact-link__name">Email</span>
+        </a>
+      </div>
+    </section>
+  </div>
+</div>
+{{ end }}

@@ -1,0 +1,45 @@
+{{ define "main" }}
+<div class="container">
+  <h1 class="page-title">
+    <span class="prompt">&gt;</span> ncmpcpp
+  </h1>
+  <p class="page-desc">我的音乐歌单</p>
+
+  <div class="music-grid">
+    <div class="music-card card">
+      <div class="music-card__icon">🎵</div>
+      <h3 class="music-card__title">每日推荐</h3>
+      <p class="music-card__desc">根据心情自动推荐</p>
+    </div>
+    <div class="music-card card">
+      <div class="music-card__icon">🎸</div>
+      <h3 class="music-card__title">摇滚/金属</h3>
+      <p class="music-card__desc">重节奏的力量</p>
+    </div>
+    <div class="music-card card">
+      <div class="music-card__icon">🎹</div>
+      <h3 class="music-card__title">古典/钢琴</h3>
+      <p class="music-card__desc">安静思考时的陪伴</p>
+    </div>
+    <div class="music-card card">
+      <div class="music-card__icon">🎧</div>
+      <h3 class="music-card__title">电子/Lo-fi</h3>
+      <p class="music-card__desc">编码时的背景音</p>
+    </div>
+  </div>
+
+  <div class="music-player">
+    <iframe
+      frameborder="no"
+      border="0"
+      marginwidth="0"
+      marginheight="0"
+      width="100%"
+      height="86"
+      src="//music.163.com/outchain/player?type=2&id=YOUR_PLAYLIST_ID&auto=0&height=66"
+      loading="lazy"
+      title="音乐播放器"
+    ></iframe>
+  </div>
+</div>
+{{ end }}

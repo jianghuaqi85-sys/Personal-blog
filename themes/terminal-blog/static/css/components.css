@@ -332,3 +332,199 @@ pre {
     grid-template-columns: 1fr;
   }
 }
+
+/* 聊天室页 */
+.chat-page__title {
+  font-family: var(--font-mono);
+  margin-bottom: var(--space-sm);
+}
+
+.chat-page__desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xl);
+}
+
+.chat-page__embed {
+  width: 100%;
+  height: calc(100vh - var(--nav-height) - 120px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.chat-page__embed iframe {
+  width: 100%;
+  height: 100%;
+  background: var(--bg-primary);
+}
+
+/* 通用页面标题 */
+.page-title {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-sm);
+}
+
+.page-desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-2xl);
+}
+
+/* 音乐页 */
+.music-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-2xl);
+}
+
+.music-card {
+  text-align: center;
+  padding: var(--space-xl);
+}
+
+.music-card__icon {
+  font-size: 2rem;
+  margin-bottom: var(--space-sm);
+}
+
+.music-card__title {
+  font-size: var(--text-base);
+  margin-bottom: var(--space-xs);
+}
+
+.music-card__desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.music-player {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  padding: var(--space-md);
+  background: var(--bg-secondary);
+}
+
+/* 个人空间 - 时间线 */
+.timeline {
+  position: relative;
+  padding-left: var(--space-2xl);
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-border);
+}
+
+.timeline__item {
+  position: relative;
+  margin-bottom: var(--space-xl);
+}
+
+.timeline__item::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--space-2xl) - 4px);
+  top: var(--space-md);
+  width: 10px;
+  height: 10px;
+  background: var(--color-terminal);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--color-terminal-glow);
+}
+
+.timeline__date {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xs);
+}
+
+.timeline__content p {
+  margin-bottom: var(--space-sm);
+}
+
+.timeline__tags {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+/* 关于页 */
+.about__section {
+  margin-bottom: var(--space-3xl);
+}
+
+.about__heading {
+  font-family: var(--font-mono);
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-xl);
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-lg);
+}
+
+.skill-card h3 {
+  font-size: var(--text-base);
+  color: var(--color-terminal);
+  margin-bottom: var(--space-xs);
+}
+
+.skill-card p {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.contact-links {
+  display: flex;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-lg) var(--space-xl);
+  text-decoration: none;
+}
+
+.contact-link__icon {
+  font-size: 1.5rem;
+}
+
+.contact-link__name {
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+}
+
+/* 友链页 */
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--space-lg);
+}
+
+.link-card {
+  text-decoration: none;
+}
+
+.link-card__name {
+  font-size: var(--text-base);
+  margin-bottom: var(--space-xs);
+}
+
+.link-card__desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
