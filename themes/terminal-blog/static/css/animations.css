@@ -1,0 +1,146 @@
+/* 光标闪烁 */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.1em;
+  background: var(--color-terminal);
+  animation: blink 1s step-end infinite;
+  vertical-align: text-bottom;
+  margin-left: 2px;
+}
+
+/* 打字机效果 - 容器初始隐藏 */
+.typewriter-line {
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.typewriter-line.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Neofetch 区域 */
+.neofetch {
+  margin-bottom: var(--space-3xl);
+}
+
+.neofetch__window {
+  background: var(--bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.neofetch__titlebar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.neofetch__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.neofetch__dot--red { background: #ff5f57; }
+.neofetch__dot--yellow { background: #ffbd2e; }
+.neofetch__dot--green { background: #28c840; }
+
+.neofetch__title {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-left: var(--space-sm);
+}
+
+.neofetch__content {
+  display: flex;
+  gap: var(--space-xl);
+  padding: var(--space-lg);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+
+.neofetch__ascii pre {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: var(--color-terminal);
+  font-size: var(--text-xs);
+  line-height: 1.2;
+}
+
+.neofetch__info {
+  flex: 1;
+}
+
+.neofetch__user {
+  color: var(--color-terminal);
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+}
+
+.neofetch__separator {
+  color: var(--color-border);
+  margin: var(--space-xs) 0;
+  font-size: var(--text-xs);
+}
+
+.neofetch__line {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.neofetch__key {
+  color: var(--color-terminal);
+  font-weight: 500;
+  min-width: 80px;
+}
+
+.neofetch__value {
+  color: var(--color-text);
+}
+
+.neofetch__colors {
+  display: flex;
+  gap: 2px;
+  margin-top: var(--space-sm);
+}
+
+.neofetch__color-block {
+  width: 24px;
+  height: 16px;
+  border-radius: 2px;
+}
+
+/* 卡片悬浮效果 */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.card:hover {
+  border-color: var(--color-border-hover);
+  transform: translateY(-4px);
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.3),
+    0 0 20px var(--color-terminal-glow);
+}

@@ -1,0 +1,19 @@
+{{ define "main" }}
+<div class="container">
+  {{ partial "neofetch.html" . }}
+
+  <section class="posts-section">
+    <h2 class="section-title">
+      <span class="prompt">&gt;</span> ls -la ~/posts/
+    </h2>
+    <div class="posts-grid">
+      {{ $posts := where .Site.RegularPages "Section" "posts" }}
+      {{ range $posts }}
+        {{ partial "post-card.html" . }}
+      {{ end }}
+    </div>
+  </section>
+
+  {{ partial "quick-links.html" . }}
+</div>
+{{ end }}

@@ -1,0 +1,33 @@
+<section class="neofetch">
+  <div class="neofetch__window">
+    <div class="neofetch__titlebar">
+      <span class="neofetch__dot neofetch__dot--red"></span>
+      <span class="neofetch__dot neofetch__dot--yellow"></span>
+      <span class="neofetch__dot neofetch__dot--green"></span>
+      <span class="neofetch__title">bash</span>
+    </div>
+    <div class="neofetch__content">
+      <div class="neofetch__ascii" id="neofetch-ascii">
+        <pre>{{ hugo.Data.profile.ascii_art }}</pre>
+      </div>
+      <div class="neofetch__info" id="neofetch-info">
+        <div class="neofetch__user typewriter-line">
+          <span class="prompt">&gt;</span> {{ hugo.Data.profile.name }}@blog
+        </div>
+        <div class="neofetch__separator typewriter-line">─────────────────────</div>
+        {{ range hugo.Data.profile.info }}
+        <div class="neofetch__line typewriter-line">
+          <span class="neofetch__key">{{ .key }}:</span>
+          <span class="neofetch__value">{{ .value }}</span>
+        </div>
+        {{ end }}
+        <div class="neofetch__separator typewriter-line">─────────────────────</div>
+        <div class="neofetch__colors typewriter-line">
+          {{ range hugo.Data.profile.colors }}
+          <span class="neofetch__color-block" style="background: {{ . }}"></span>
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

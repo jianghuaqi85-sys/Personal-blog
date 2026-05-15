@@ -1,0 +1,29 @@
+name: "你的名字"
+ascii_art: |
+  ██████
+  ██   ██
+  ██████
+  ██   ██
+  ██████
+info:
+  - key: "OS"
+    value: "Windows 11"
+  - key: "Shell"
+    value: "bash"
+  - key: "Skills"
+    value: "Java, Go, Vue, React"
+  - key: "Projects"
+    value: "15"
+  - key: "Blog"
+    value: "0 篇"
+  - key: "Uptime"
+    value: "999 天"
+colors:
+  - "#0a0a0a"
+  - "#ff5555"
+  - "#50fa7b"
+  - "#f1fa8c"
+  - "#6272a4"
+  - "#ff79c6"
+  - "#8be9fd"
+  - "#f8f8f2"
