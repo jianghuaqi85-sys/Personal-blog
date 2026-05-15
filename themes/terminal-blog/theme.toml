@@ -1,0 +1,9 @@
+name = "Terminal Blog"
+license = "MIT"
+licenselink = "https://github.com/your-name/terminal-blog/blob/main/LICENSE"
+description = "暗黑终端绿风格的 Hugo 个人博客主题"
+tags = ["terminal", "dark", "blog", "minimal"]
+min_version = "0.120.0"
+
+[author]
+  name = "你的名字"

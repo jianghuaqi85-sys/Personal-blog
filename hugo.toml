@@ -1,0 +1,50 @@
+baseURL = "https://your-domain.com"
+locale = "zh-cn"
+defaultContentLanguage = "zh"
+title = "我的博客"
+theme = "terminal-blog"
+paginate = 12
+
+[params]
+  author = "你的名字"
+  description = "暗黑终端风格的个人博客"
+  terminalGreen = "#00ff41"
+  showReadingTime = true
+  showWordCount = true
+
+[markup]
+  [markup.highlight]
+    style = "monokai"
+    lineNos = true
+    codeFences = true
+    guessSyntax = true
+    noClasses = true
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[menu]
+  [[menu.main]]
+    name = "首页"
+    url = "/"
+    weight = 1
+  [[menu.main]]
+    name = "关于"
+    url = "/about/"
+    weight = 2
+  [[menu.main]]
+    name = "音乐"
+    url = "/music/"
+    weight = 3
+  [[menu.main]]
+    name = "空间"
+    url = "/space/"
+    weight = 4
+  [[menu.main]]
+    name = "聊天室"
+    url = "/chat/"
+    weight = 5
+  [[menu.main]]
+    name = "友链"
+    url = "/links/"
+    weight = 6
