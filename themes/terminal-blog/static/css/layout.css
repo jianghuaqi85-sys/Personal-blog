@@ -137,3 +137,32 @@
     display: flex;
   }
 }
+
+/* 移动端微调 */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 var(--space-md);
+  }
+
+  .neofetch__content {
+    flex-direction: column;
+  }
+
+  .neofetch__ascii {
+    text-align: center;
+  }
+
+  .quick-links__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .posts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-links__grid {
+    grid-template-columns: 1fr;
+  }
+}
