@@ -22,3 +22,114 @@
   background: var(--color-border);
   margin: var(--space-2xl) 0;
 }
+
+/* 文章卡片 */
+.posts-section {
+  margin-bottom: var(--space-3xl);
+}
+
+.section-title {
+  font-family: var(--font-mono);
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-xl);
+  color: var(--color-text);
+}
+
+.section-title .prompt {
+  margin-right: var(--space-xs);
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--space-xl);
+}
+
+.post-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+}
+
+.post-card__date {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.post-card__tags {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.post-card__title {
+  margin-bottom: var(--space-sm);
+}
+
+.post-card__title a {
+  color: var(--color-text);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.post-card__title a:hover {
+  color: var(--color-terminal);
+}
+
+.post-card__summary {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+  line-height: 1.6;
+}
+
+.post-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.post-card__more {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+/* 快速入口 */
+.quick-links {
+  margin-bottom: var(--space-3xl);
+}
+
+.quick-links__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-md);
+}
+
+.quick-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  text-align: center;
+  padding: var(--space-xl) var(--space-lg);
+  text-decoration: none;
+}
+
+.quick-link__cmd {
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  color: var(--color-terminal);
+  font-weight: 600;
+}
+
+.quick-link__desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.quick-link:hover .quick-link__cmd {
+  text-shadow: 0 0 10px var(--color-terminal-glow);
+}

@@ -1,1 +1,22 @@
-{{/* 文章卡片组件 - 将在 Task 5 中实现 */}}
+<article class="post-card card">
+  <div class="post-card__meta">
+    <span class="post-card__date">
+      <span class="prompt">&gt;</span> {{ .Date.Format "2006.01.02" }}
+    </span>
+    {{ if .Params.tags }}
+    <div class="post-card__tags">
+      {{ range .Params.tags }}
+      <span class="tag">{{ . }}</span>
+      {{ end }}
+    </div>
+    {{ end }}
+  </div>
+  <h3 class="post-card__title">
+    <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+  </h3>
+  <p class="post-card__summary">{{ .Summary | truncate 150 }}</p>
+  <div class="post-card__footer">
+    <span class="post-card__readtime">{{ .ReadingTime }} 分钟阅读</span>
+    <a href="{{ .RelPermalink }}" class="post-card__more">阅读全文 →</a>
+  </div>
+</article>
