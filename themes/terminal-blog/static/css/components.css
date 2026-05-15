@@ -133,3 +133,202 @@
 .quick-link:hover .quick-link__cmd {
   text-shadow: 0 0 10px var(--color-terminal-glow);
 }
+
+/* 文章页 */
+.post__header {
+  margin-bottom: var(--space-2xl);
+  padding-bottom: var(--space-xl);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.post__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.post__title {
+  font-size: var(--text-3xl);
+  color: var(--color-text);
+  margin-bottom: var(--space-md);
+}
+
+.post__tags {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.post__body {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: var(--space-2xl);
+  align-items: start;
+}
+
+/* TOC */
+.post__toc {
+  position: sticky;
+  top: calc(var(--nav-height) + var(--space-xl));
+  max-height: calc(100vh - var(--nav-height) - var(--space-3xl));
+  overflow-y: auto;
+  padding: var(--space-lg);
+  background: var(--bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.toc__title {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-terminal);
+  margin-bottom: var(--space-md);
+}
+
+.toc__nav ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.toc__nav li {
+  margin-bottom: var(--space-xs);
+}
+
+.toc__nav a {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  display: block;
+  padding: var(--space-xs) var(--space-sm);
+  border-left: 2px solid transparent;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.toc__nav a:hover,
+.toc__nav a.toc__link--active {
+  color: var(--color-terminal);
+  border-left-color: var(--color-terminal);
+  background: var(--color-terminal-glow);
+}
+
+.toc__nav ul ul {
+  padding-left: var(--space-md);
+}
+
+/* 文章内容 */
+.post__content {
+  max-width: 720px;
+}
+
+.post__content h2 {
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+.post__content h2:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.post__content blockquote {
+  border-left: 3px solid var(--color-terminal);
+  padding-left: var(--space-lg);
+  margin: var(--space-lg) 0;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.post__content img {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  margin: var(--space-lg) 0;
+}
+
+/* 代码块复制按钮 */
+pre {
+  position: relative;
+}
+
+.copy-btn {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  background: var(--bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-xs) var(--space-sm);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.copy-btn:hover {
+  color: var(--color-terminal);
+  border-color: var(--color-terminal);
+}
+
+/* 文章导航 */
+.post__footer {
+  margin-top: var(--space-3xl);
+  padding-top: var(--space-xl);
+  border-top: 1px solid var(--color-border);
+}
+
+.post__nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+.post__nav-link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-lg);
+  background: var(--bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: all var(--duration-normal) var(--ease-out);
+  text-decoration: none;
+}
+
+.post__nav-link:hover {
+  border-color: var(--color-border-hover);
+}
+
+.post__nav-link--next {
+  text-align: right;
+}
+
+.post__nav-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.post__nav-title {
+  font-size: var(--text-base);
+  color: var(--color-text);
+}
+
+/* 移动端：隐藏 TOC */
+@media (max-width: 768px) {
+  .post__body {
+    grid-template-columns: 1fr;
+  }
+
+  .post__toc {
+    display: none;
+  }
+
+  .post__nav {
+    grid-template-columns: 1fr;
+  }
+}

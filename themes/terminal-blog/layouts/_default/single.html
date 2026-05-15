@@ -1,8 +1,54 @@
 {{ define "main" }}
-<article class="content container">
-  <h1 class="content__title">{{ .Title }}</h1>
-  <div class="content__body">
-    {{ .Content }}
-  </div>
-</article>
+<div class="container">
+  <article class="post">
+    <header class="post__header">
+      <div class="post__meta">
+        <span class="post__date">
+          <span class="prompt">&gt;</span> {{ .Date.Format "2006.01.02" }}
+        </span>
+        <span class="post__readtime">{{ .ReadingTime }} 分钟阅读</span>
+      </div>
+      <h1 class="post__title">{{ .Title }}</h1>
+      {{ if .Params.tags }}
+      <div class="post__tags">
+        {{ range .Params.tags }}
+        <span class="tag">{{ . }}</span>
+        {{ end }}
+      </div>
+      {{ end }}
+    </header>
+
+    <div class="post__body">
+      <aside class="post__toc" id="toc">
+        <div class="toc__title">
+          <span class="prompt">&gt;</span> cat 目录
+        </div>
+        <nav class="toc__nav" id="toc-nav">
+          {{ .TableOfContents }}
+        </nav>
+      </aside>
+
+      <div class="post__content" id="post-content">
+        {{ .Content }}
+      </div>
+    </div>
+
+    <footer class="post__footer">
+      <div class="post__nav">
+        {{ with .PrevInSection }}
+        <a href="{{ .RelPermalink }}" class="post__nav-link post__nav-link--prev">
+          <span class="post__nav-label">&lt; 上一篇</span>
+          <span class="post__nav-title">{{ .Title }}</span>
+        </a>
+        {{ end }}
+        {{ with .NextInSection }}
+        <a href="{{ .RelPermalink }}" class="post__nav-link post__nav-link--next">
+          <span class="post__nav-label">下一篇 &gt;</span>
+          <span class="post__nav-title">{{ .Title }}</span>
+        </a>
+        {{ end }}
+      </div>
+    </footer>
+  </article>
+</div>
 {{ end }}
