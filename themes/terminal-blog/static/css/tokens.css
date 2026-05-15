@@ -1,0 +1,51 @@
+:root {
+  /* 配色 */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #111111;
+  --bg-card: #111111;
+  --bg-code: #1a1a1a;
+  --color-terminal: #00ff41;
+  --color-terminal-dim: #00cc33;
+  --color-terminal-glow: rgba(0, 255, 65, 0.15);
+  --color-text: #e0e0e0;
+  --color-text-muted: #888888;
+  --color-border: #1a1a1a;
+  --color-border-hover: #00ff41;
+
+  /* 字体 */
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --font-sans: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-heading: 'Fira Code', 'JetBrains Mono', monospace;
+
+  /* 字号 */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
+
+  /* 间距 */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+  /* 圆角 */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* 过渡 */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* 布局 */
+  --max-width: 1200px;
+  --nav-height: 60px;
+}
