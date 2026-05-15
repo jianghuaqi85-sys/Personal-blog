@@ -1,0 +1,21 @@
+<nav class="nav">
+  <div class="nav__inner container">
+    <a href="/" class="nav__logo">
+      <span class="nav__prompt">&gt;</span> {{ .Site.Title }}
+    </a>
+    <button class="nav__toggle" aria-label="Toggle menu" id="nav-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <ul class="nav__links" id="nav-links">
+      {{ range .Site.Menus.main }}
+        <li>
+          <a href="{{ .URL }}" class="nav__link{{ if eq $.RelPermalink .URL }} nav__link--active{{ end }}">
+            {{ .Name }}
+          </a>
+        </li>
+      {{ end }}
+    </ul>
+  </div>
+</nav>
