@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Locale }}">
+<head>
+  {{ partial "head.html" . }}
+</head>
+<body class="body--chat">
+  {{ partial "nav.html" . }}
+  <main class="main main--chat">
+    {{ block "main" . }}{{ end }}
+  </main>
+
+  <!-- 脚本 -->
+  <script src="/js/typewriter.js" defer></script>
+  <script src="/js/toc.js" defer></script>
+  <script src="/js/copy-code.js" defer></script>
+  <script src="/js/mini-player.js" defer></script>
+  <script>
+    document.getElementById('nav-toggle')?.addEventListener('click', () => {
+      document.getElementById('nav-links')?.classList.toggle('nav__links--open');
+    });
+  </script>
+
+  {{ partial "mini-player.html" . }}
+</body>
+</html>

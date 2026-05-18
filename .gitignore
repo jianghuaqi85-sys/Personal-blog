@@ -1,3 +1,19 @@
 public/
 resources/
 .hugo_build.lock
+
+# TinaCMS
+node_modules/
+.tina/
+static/admin/
+tina/__generated__/
+
+# 聊天室后端
+chat-server/.env
+chat-server/.tunnel_url
+chat-server/*.exe
+chat-server/bin/
+chat-server/*.test
+chat-server/*.out
+chat-server/uploads/
+chat-server/*.log

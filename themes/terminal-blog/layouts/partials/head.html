@@ -3,10 +3,10 @@
 <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
 <title>{{ if not .IsHome }}{{ .Title }} | {{ end }}{{ .Site.Title }}</title>
 
-<!-- 字体 -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- 字体（Google Fonts 国内由 loli.net 镜像提供） -->
+<link rel="preconnect" href="https://fonts.loli.net">
+<link rel="preconnect" href="https://gstatic.loli.net" crossorigin>
+<link href="https://fonts.loli.net/css2?family=Fira+Code:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
 
 <!-- 样式 -->
 <link rel="stylesheet" href="/css/tokens.css">
@@ -16,4 +16,21 @@
 <link rel="stylesheet" href="/css/animations.css">
 
 <!-- Favicon -->
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%230a0a0a'/><text x='6' y='24' font-family='monospace' font-weight='bold' font-size='22' fill='%2300ff41'>&gt;</text></svg>">
+
+<!-- 即时音频恢复：非音乐页面加载时立即从 sessionStorage 恢复播放 -->
+<script>
+(function(){
+  try{
+    if(location.pathname.indexOf('/music/')===0) return;
+    var s=JSON.parse(sessionStorage.getItem('music_player_state'));
+    if(!s||!s.url||!s.playing) return;
+    if(Date.now()-(s.ts||0)>30000) return;
+    var a=new Audio();
+    a.src=s.url;
+    a.currentTime=Math.min((s.currentTime||0)+((Date.now()-(s.ts||0))/1000),s.duration||Infinity);
+    a.play().catch(function(){});
+    window.__miniAudio=a;
+  }catch(e){}
+})();
+</script>

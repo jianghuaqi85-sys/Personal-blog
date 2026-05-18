@@ -115,6 +115,16 @@
   color: var(--color-text-muted);
 }
 
+/* 聊天室全屏布局 */
+.body--chat {
+  overflow: hidden;
+}
+
+.main--chat {
+  padding-top: 0;
+  min-height: auto;
+}
+
 /* 移动端响应 */
 @media (max-width: 768px) {
   .nav__toggle {

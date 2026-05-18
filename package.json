@@ -1,0 +1,15 @@
+{
+  "name": "my-hugo-blog",
+  "private": true,
+  "scripts": {
+    "dev": "tinacms dev --port 4002 --datalayer-port 9001 -c \"hugo server -D -p 1313\"",
+    "build": "tinacms build && hugo --minify",
+    "tina:dev": "tinacms dev --port 4002 --datalayer-port 9001 -c \"hugo server -D -p 1313\""
+  },
+  "dependencies": {
+    "tinacms": "^2.7.0"
+  },
+  "devDependencies": {
+    "@tinacms/cli": "^1.9.0"
+  }
+}

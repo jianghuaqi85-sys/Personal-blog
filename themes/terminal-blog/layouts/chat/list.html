@@ -1,20 +1,68 @@
 {{ define "main" }}
 <div class="chat-page">
-  <div class="container">
-    <h1 class="chat-page__title">
-      <span class="prompt">&gt;</span> ssh chat@room
-    </h1>
-    <p class="chat-page__desc">实时聊天室已连接</p>
-  </div>
-  <div class="chat-page__embed">
-    <!-- 将 src 替换为你的聊天室实际地址 -->
+  <div class="chat-page__embed" id="chat-embed">
+    <div class="chat-loading" id="chat-loading">
+      <div class="chat-loading__spinner"></div>
+      <span>正在连接聊天室...</span>
+    </div>
     <iframe
-      src="https://your-chat-room-url.com"
+      src="https://chat.laojiang666.cn"
       frameborder="0"
       allowfullscreen
-      loading="lazy"
       title="聊天室"
+      onload="document.getElementById('chat-loading').style.display='none'"
     ></iframe>
   </div>
 </div>
+
+<style>
+.chat-page {
+  position: fixed;
+  top: var(--nav-height);
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.chat-page__embed {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.chat-page__embed iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.chat-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background: #0a0a0a;
+  color: #00ff41;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.9rem;
+  z-index: 1;
+}
+
+.chat-loading__spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #1a1a2e;
+  border-top-color: #00ff41;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>
 {{ end }}

@@ -1,4 +1,5 @@
-name: "你的名字"
+name: "老蒋"
+githubUser: "jianghuaqi85-sys"
 ascii_art: |
   ██████
   ██   ██
@@ -11,13 +12,19 @@ info:
   - key: "Shell"
     value: "bash"
   - key: "Skills"
-    value: "Java, Go, Vue, React"
-  - key: "Projects"
-    value: "15"
-  - key: "Blog"
-    value: "0 篇"
-  - key: "Uptime"
-    value: "999 天"
+    value: "Go, Java, JavaScript, React"
+  - key: "Repos"
+    value: "载入中..."
+    source: "github"
+  - key: "Stars"
+    value: "载入中..."
+    source: "github"
+  - key: "Followers"
+    value: "载入中..."
+    source: "github"
+  - key: "Joined"
+    value: "载入中..."
+    source: "github"
 colors:
   - "#0a0a0a"
   - "#ff5555"

@@ -1,4 +1,4 @@
-baseURL = "https://your-domain.com"
+baseURL = "https://laojiang666.cn"
 locale = "zh-cn"
 defaultContentLanguage = "zh"
 title = "我的博客"
@@ -6,7 +6,7 @@ theme = "terminal-blog"
 paginate = 12
 
 [params]
-  author = "你的名字"
+  author = "老蒋"
   description = "暗黑终端风格的个人博客"
   terminalGreen = "#00ff41"
   showReadingTime = true
@@ -22,6 +22,11 @@ paginate = 12
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
+
+[security]
+  [security.http]
+    methods = ["(?i)GET|POST"]
+    urls = [".*"]
 
 [menu]
   [[menu.main]]

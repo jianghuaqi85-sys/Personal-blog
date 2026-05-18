@@ -1,0 +1,29 @@
+<!-- 全站迷你播放器 -->
+<link rel="stylesheet" href="/css/mini-player.css">
+<div id="mini-player" class="mini-player" style="display:none">
+  <a href="/music/" class="mini-player__cover" id="mini-cover">
+    <img id="mini-cover-img" src="" alt="cover">
+  </a>
+  <div class="mini-player__info">
+    <a href="/music/" class="mini-player__title" id="mini-title">--</a>
+    <span class="mini-player__artist" id="mini-artist">--</span>
+  </div>
+  <div class="mini-player__controls">
+    <button class="mini-player__btn" id="mini-prev" aria-label="上一首">
+      <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z" fill="currentColor"/></svg>
+    </button>
+    <button class="mini-player__btn mini-player__btn--play" id="mini-play" aria-label="播放">
+      <svg viewBox="0 0 24 24" width="22" height="22" id="mini-play-icon"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+    </button>
+    <button class="mini-player__btn" id="mini-next" aria-label="下一首">
+      <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" fill="currentColor"/></svg>
+    </button>
+  </div>
+  <div class="mini-player__progress">
+    <div class="mini-player__bar" id="mini-bar">
+      <div class="mini-player__loaded" id="mini-loaded"></div>
+      <div class="mini-player__played" id="mini-played"></div>
+    </div>
+    <span class="mini-player__time" id="mini-time">0:00</span>
+  </div>
+</div>

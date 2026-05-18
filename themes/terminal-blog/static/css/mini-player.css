@@ -1,0 +1,150 @@
+/* 迷你播放器样式 */
+.mini-player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.mini-player__cover {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  text-decoration: none;
+}
+.mini-player__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.mini-player__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.mini-player__title {
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none;
+}
+.mini-player__title:hover {
+  color: var(--color-terminal);
+}
+.mini-player__artist {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mini-player__controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.mini-player__btn {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--duration-fast), background var(--duration-fast);
+}
+.mini-player__btn:hover {
+  color: var(--color-terminal);
+  background: var(--color-terminal-glow);
+}
+.mini-player__btn--play {
+  color: var(--color-terminal);
+}
+
+.mini-player__progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  width: 180px;
+}
+.mini-player__bar {
+  flex: 1;
+  height: 4px;
+  background: var(--color-border);
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.mini-player__loaded {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: rgba(0, 255, 65, 0.2);
+  width: 0;
+}
+.mini-player__played {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--color-terminal);
+  width: 0;
+  border-radius: 2px;
+}
+.mini-player__time {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  min-width: 36px;
+  text-align: right;
+}
+
+/* 给 body 添加底部间距，避免内容被遮挡 */
+body.has-mini-player {
+  padding-bottom: 56px;
+}
+
+/* 音乐页面隐藏迷你播放器 */
+.mini-player--hidden {
+  display: none !important;
+}
+
+/* 移动端响应式 */
+@media (max-width: 640px) {
+  .mini-player {
+    gap: 8px;
+    padding: 0 10px;
+  }
+  .mini-player__progress {
+    display: none;
+  }
+  .mini-player__info {
+    flex: 1;
+  }
+}

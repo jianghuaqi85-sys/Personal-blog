@@ -1,4 +1,5 @@
 {{ define "main" }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
 <div class="container">
   <h1 class="page-title">
     <span class="prompt">&gt;</span> ncmpcpp
@@ -6,40 +7,405 @@
   <p class="page-desc">我的音乐歌单</p>
 
   <div class="music-grid">
-    <div class="music-card card">
-      <div class="music-card__icon">🎵</div>
-      <h3 class="music-card__title">每日推荐</h3>
-      <p class="music-card__desc">根据心情自动推荐</p>
+    {{ range $i, $p := .Site.Data.playlists.playlists }}
+    <div class="music-card card{{ if eq $i 0 }} music-card--active{{ end }}"
+         data-playlist="{{ $p.id }}"
+         onclick="playPlaylist(this, '{{ $p.id }}', '{{ $p.name }}')">
+      <div class="music-card__play"></div>
+      <div class="music-card__icon">{{ $p.icon }}</div>
+      <h3 class="music-card__title">{{ $p.name }}</h3>
+      <p class="music-card__desc">{{ $p.desc }}</p>
     </div>
-    <div class="music-card card">
-      <div class="music-card__icon">🎸</div>
-      <h3 class="music-card__title">摇滚/金属</h3>
-      <p class="music-card__desc">重节奏的力量</p>
-    </div>
-    <div class="music-card card">
-      <div class="music-card__icon">🎹</div>
-      <h3 class="music-card__title">古典/钢琴</h3>
-      <p class="music-card__desc">安静思考时的陪伴</p>
-    </div>
-    <div class="music-card card">
-      <div class="music-card__icon">🎧</div>
-      <h3 class="music-card__title">电子/Lo-fi</h3>
-      <p class="music-card__desc">编码时的背景音</p>
-    </div>
+    {{ end }}
   </div>
 
   <div class="music-player">
-    <iframe
-      frameborder="no"
-      border="0"
-      marginwidth="0"
-      marginheight="0"
-      width="100%"
-      height="86"
-      src="//music.163.com/outchain/player?type=2&id=YOUR_PLAYLIST_ID&auto=0&height=66"
-      loading="lazy"
-      title="音乐播放器"
-    ></iframe>
+    <div class="music-player__header">
+      <span class="prompt">&gt;</span>
+      <span id="player-status">loading...</span>
+    </div>
+    <div id="aplayer" class="music-player__embed">
+      <div id="player-skeleton" class="skeleton-player">
+        <div class="skeleton-thumb"></div>
+        <div class="skeleton-info">
+          <div class="skeleton-line skeleton-line--title"></div>
+          <div class="skeleton-line skeleton-line--artist"></div>
+          <div class="skeleton-line skeleton-line--bar"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<script>
+var API_BASE = 'https://music-api.laojiang666.cn';
+var COOKIE = 'MUSIC_U=0083C54D47841C9BFC89B554968D7E44A576D472B9334CC9324A64A2F1B721B5AE9DFB4F495C3AF7D50D00D45000073975A85A6DD088CC1B2A1C8C1C91447E70CDA68BAB881701CF612FA3112DF72C779191B6CA50416EEDC180F5519A863BF8AB8360477F0552E679B9B8C48AAAAEA8BF8640317525A92A104AD0DA3BF241E6D3F20C66C595F6470EF747FAE471064AC0F31208C637C568D971D191D98D5405D90C3931FBDF4A546C07FB73FF2DF76A2C6ACCB5109E8E24B8CC10DF32DED05CB8D171B51119B6DE66905CF668CA76755FEF82110B81CC19803306067F4018409E76C8A3A3D4A1264DD6CC8539C48968369AD080F9974DE7F1FD6588AD7ADD11FC2105539FF36F94FA80EBA891197A5507B13A8A6EAA1FC0EE9771A53E2A24AC7D1C138919896A5A4CAEC9C7E8D3DADFBB96054D3616262E3CE0363FD21CA86CE2991C8A2085C946BDF53C2CEF651013E01F7B7815EAD1649AABD563EDD97519958827FC0E63FF71720187A82777B44E66969A35617F481CA4193005152F658D4B3794CAD2ABEAB1909366956DB59EA0CC';
+var CACHE_TTL = 24 * 60 * 60 * 1000; // 缓存 24 小时
+var ap = null;
+var syncTimer = null;
+
+// 直接写存储，不依赖 mini-player.js（它可能还没加载）
+function saveToStorage(tracks, idx, currentTime, playing) {
+  var now = Date.now();
+  try {
+    localStorage.setItem('music_player_state', JSON.stringify({
+      tracks: tracks, index: idx, currentTime: currentTime, playing: playing, ts: now
+    }));
+  } catch(e) {}
+}
+function saveToSession(track, idx, currentTime, playing, tracks) {
+  if (!track) return;
+  try {
+    sessionStorage.setItem('music_player_state', JSON.stringify({
+      url: track.url, tracks: tracks, index: idx,
+      currentTime: currentTime, duration: 0, playing: playing, ts: Date.now()
+    }));
+  } catch(e) {}
+}
+
+// --- 缓存工具 ---
+function getCache(key) {
+  try {
+    var raw = localStorage.getItem('music_' + key);
+    if (!raw) return null;
+    var entry = JSON.parse(raw);
+    if (Date.now() - entry.ts > CACHE_TTL) {
+      localStorage.removeItem('music_' + key);
+      return null;
+    }
+    return entry.data;
+  } catch (e) { return null; }
+}
+
+function setCache(key, data) {
+  try {
+    localStorage.setItem('music_' + key, JSON.stringify({ ts: Date.now(), data: data }));
+  } catch (e) {
+    // 存储满了就清理旧缓存
+    try {
+      Object.keys(localStorage).forEach(function(k) {
+        if (k.startsWith('music_')) localStorage.removeItem(k);
+      });
+      localStorage.setItem('music_' + key, JSON.stringify({ ts: Date.now(), data: data }));
+    } catch (e2) {}
+  }
+}
+
+// --- API 请求 ---
+function fetchSongUrls(ids) {
+  var batches = [];
+  for (var i = 0; i < ids.length; i += 100) {
+    batches.push(ids.slice(i, i + 100));
+  }
+  return Promise.all(batches.map(function(batch) {
+    return fetch(API_BASE + '/song/url?id=' + batch.join(',') + '&cookie=' + encodeURIComponent(COOKIE))
+      .then(function(r) { return r.json(); });
+  })).then(function(urlBatches) {
+    var urlMap = {};
+    urlBatches.forEach(function(urlData) {
+      (urlData.data || []).forEach(function(d) {
+        urlMap[d.id] = d.url;
+      });
+    });
+    return urlMap;
+  });
+}
+
+function buildTracks(tracks, urlMap) {
+  return tracks.map(function(t) {
+    return {
+      name: t.name,
+      artist: t.ar.map(function(a) { return a.name; }).join(' / '),
+      url: urlMap[t.id] || '',
+      cover: t.al.picUrl,
+      lrc: API_BASE + '/lyric?id=' + t.id + '&cookie=' + encodeURIComponent(COOKIE)
+    };
+  }).filter(function(t) { return t.url; });
+}
+
+function fetchPlaylistMeta(id) {
+  return fetch(API_BASE + '/playlist/detail?id=' + id + '&cookie=' + encodeURIComponent(COOKIE))
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.code !== 200 || !data.playlist) throw Error('API error');
+      return data.playlist.tracks || [];
+    });
+}
+
+// --- 播放器初始化 ---
+function initPlayer(tracks, name, autoPlay) {
+  // 停掉 head.html 内联启动的 Audio
+  if (window.__miniAudio) {
+    try { window.__miniAudio.pause(); } catch(e) {}
+    window.__miniAudio = null;
+  }
+
+  var container = document.getElementById('aplayer');
+  var skeleton = document.getElementById('player-skeleton');
+  if (skeleton) skeleton.remove();
+  container.innerHTML = '';
+  ap = new APlayer({
+    container: container,
+    audio: tracks,
+    theme: '#00ff41',
+    lrcType: 3,
+    fixed: false,
+    mini: false,
+    autoplay: !!autoPlay
+  });
+  document.getElementById('player-status').textContent = 'now playing: ' + name + ' (' + tracks.length + ' tracks)';
+
+  // 同步状态
+  if (syncTimer) clearInterval(syncTimer);
+  function doSync() {
+    if (ap && ap.list) {
+      var idx = ap.list.index;
+      var track = tracks[idx];
+      var currentTime = ap.audio.currentTime;
+      var playing = !ap.audio.paused;
+      saveToStorage(tracks, idx, currentTime, playing);
+      if (track) saveToSession(track, idx, currentTime, playing, tracks);
+    }
+  }
+
+  ap.on('play', doSync);
+  ap.on('pause', doSync);
+  ap.on('ended', doSync);
+  ap.on('loadedmetadata', doSync);
+  syncTimer = setInterval(doSync, 3000);
+
+  if (window._musicVisHandler) document.removeEventListener('visibilitychange', window._musicVisHandler);
+  window._musicVisHandler = function() {
+    if (document.hidden) doSync();
+  };
+  document.addEventListener('visibilitychange', window._musicVisHandler);
+
+  if (window._musicPageHide) window.removeEventListener('pagehide', window._musicPageHide);
+  window._musicPageHide = doSync;
+  window.addEventListener('pagehide', window._musicPageHide);
+}
+
+function setStatus(text) {
+  document.getElementById('player-status').textContent = text;
+}
+
+// --- 核心：带缓存的加载 ---
+function playPlaylist(el, id, name) {
+  document.querySelectorAll('.music-card').forEach(function(c) {
+    c.classList.remove('music-card--active');
+  });
+  el.classList.add('music-card--active');
+
+  // 1. 检查缓存 → 立即播放
+  var cached = getCache(id);
+  if (cached) {
+    initPlayer(cached, name, true);
+    refreshCache(id, name);
+    return;
+  }
+
+  // 2. 无缓存 → 先加载第一首立即播放，剩余后台加载
+  setStatus('loading...');
+  fetchPlaylistMeta(id).then(function(tracks) {
+    if (!tracks.length) { setStatus('empty playlist'); return; }
+
+    return fetchSongUrls([tracks[0].id]).then(function(urlMap) {
+      var firstTrack = buildTracks([tracks[0]], urlMap);
+      if (firstTrack.length) {
+        initPlayer(firstTrack, name, true);
+        setStatus('now playing: ' + name + ' (loading more...)');
+      }
+
+      var remainingIds = tracks.slice(1).map(function(t) { return t.id; });
+      if (!remainingIds.length) return;
+
+      fetchSongUrls(remainingIds).then(function(restUrlMap) {
+        var allUrlMap = Object.assign({}, urlMap, restUrlMap);
+        var allTracks = buildTracks(tracks, allUrlMap);
+        var currentTime = ap ? ap.audio.currentTime : 0;
+        var wasPlaying = ap ? !ap.audio.paused : false;
+        initPlayer(allTracks, name, wasPlaying);
+        if (currentTime > 0) ap.seek(currentTime);
+        setCache(id, allTracks);
+      });
+    });
+  }).catch(function(e) {
+    setStatus('load failed: ' + e.message);
+    console.error('Playlist load error:', e);
+  });
+}
+
+// 后台静默刷新缓存
+function refreshCache(id, name) {
+  fetchPlaylistMeta(id).then(function(tracks) {
+    var ids = tracks.map(function(t) { return t.id; });
+    return fetchSongUrls(ids).then(function(urlMap) {
+      var allTracks = buildTracks(tracks, urlMap);
+      setCache(id, allTracks);
+    });
+  }).catch(function() {}); // 静默失败
+}
+
+// --- 加载第一个歌单 ---
+document.addEventListener('DOMContentLoaded', function() {
+  var firstCard = document.querySelector('.music-card--active');
+  if (!firstCard) return;
+
+  var id = firstCard.getAttribute('data-playlist');
+  var name = firstCard.querySelector('.music-card__title').textContent;
+
+  // 从 localStorage 检查是否有正在播放的歌曲（从其他页面返回）
+  var state = null;
+  try {
+    var raw = localStorage.getItem('music_player_state');
+    if (raw) state = JSON.parse(raw);
+  } catch(e) {}
+
+  if (state && state.tracks && state.tracks.length && state.playing) {
+    var currentTrack = state.tracks[state.index];
+    if (!currentTrack || !currentTrack.url) {
+      playPlaylist(firstCard, id, name);
+      return;
+    }
+
+    var cached = getCache(id);
+    if (cached) {
+      // 在缓存中找当前歌曲
+      var foundIdx = -1;
+      for (var i = 0; i < cached.length; i++) {
+        if (cached[i].url === currentTrack.url) { foundIdx = i; break; }
+      }
+      if (foundIdx >= 0) {
+        // 用缓存初始化，切到正确歌曲
+        initPlayer(cached, name, true);
+        if (foundIdx > 0 && ap.list) ap.list.switch(foundIdx);
+        // seek 到正确位置（等元数据加载）
+        var savedTime = state.currentTime || 0;
+        function doSeek() {
+          if (ap && ap.audio && ap.audio.duration) {
+            ap.seek(Math.min(savedTime, ap.audio.duration));
+          }
+        }
+        if (ap.audio.readyState >= 1) doSeek();
+        else ap.audio.addEventListener('loadedmetadata', doSeek, { once: true });
+        refreshCache(id, name);
+      } else {
+        // URL 在缓存中找不到，正常加载
+        playPlaylist(firstCard, id, name);
+      }
+    } else {
+      // 没缓存，正常加载
+      playPlaylist(firstCard, id, name);
+    }
+  } else {
+    playPlaylist(firstCard, id, name);
+  }
+});
+</script>
+
+<style>
+/* 音乐页面隐藏全站迷你播放器 */
+.mini-player { display: none !important; }
+body.has-mini-player { padding-bottom: 0; }
+
+.music-player__embed {
+  min-height: 200px;
+}
+
+/* 骨架屏 */
+.skeleton-player {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  align-items: center;
+}
+.skeleton-thumb {
+  width: 66px;
+  height: 66px;
+  border-radius: 4px;
+  background: var(--color-border);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.skeleton-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.skeleton-line {
+  border-radius: 4px;
+  background: var(--color-border);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+.skeleton-line--title { width: 50%; height: 14px; }
+.skeleton-line--artist { width: 35%; height: 12px; }
+.skeleton-line--bar { width: 100%; height: 4px; margin-top: 4px; }
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+.aplayer {
+  background: var(--bg-secondary) !important;
+  color: var(--color-text) !important;
+  font-family: var(--font-sans) !important;
+}
+.aplayer .aplayer-info {
+  border-bottom: 1px solid var(--color-border) !important;
+}
+.aplayer .aplayer-info .aplayer-music .aplayer-title {
+  color: var(--color-text) !important;
+}
+.aplayer .aplayer-info .aplayer-music .aplayer-author {
+  color: var(--color-text-muted) !important;
+}
+.aplayer .aplayer-controller .aplayer-bar {
+  background: var(--color-border) !important;
+}
+.aplayer .aplayer-controller .aplayer-loaded {
+  background: rgba(0, 255, 65, 0.3) !important;
+}
+.aplayer .aplayer-controller .aplayer-played {
+  background: var(--color-terminal) !important;
+}
+.aplayer .aplayer-controller .aplayer-played .aplayer-thumb {
+  background: var(--color-terminal) !important;
+}
+.aplayer .aplayer-icon {
+  color: var(--color-text) !important;
+}
+.aplayer .aplayer-icon:hover {
+  color: var(--color-terminal) !important;
+}
+.aplayer .aplayer-volume-bar {
+  background: var(--color-border) !important;
+}
+.aplayer .aplayer-volume-bar .aplayer-volume {
+  background: var(--color-terminal) !important;
+}
+.aplayer .aplayer-list {
+  border-top: 1px solid var(--color-border) !important;
+}
+.aplayer .aplayer-list li {
+  border-bottom: 1px solid var(--color-border) !important;
+  color: var(--color-text-muted) !important;
+}
+.aplayer .aplayer-list li:hover {
+  background: var(--color-terminal-glow) !important;
+}
+.aplayer .aplayer-list li.aplayer-list-light {
+  background: var(--color-terminal-glow) !important;
+  color: var(--color-terminal) !important;
+}
+.aplayer .aplayer-lrc {
+  color: var(--color-text-muted) !important;
+}
+.aplayer .aplayer-lrc p {
+  color: var(--color-text-muted) !important;
+}
+.aplayer .aplayer-lrc p.aplayer-lrc-current {
+  color: var(--color-terminal) !important;
+}
+</style>
 {{ end }}

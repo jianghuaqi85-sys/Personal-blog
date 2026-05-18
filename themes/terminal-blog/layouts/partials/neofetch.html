@@ -1,3 +1,30 @@
+{{/* 先从 GitHub API 获取构建时数据 */}}
+{{- $ghUser := .Site.Data.profile.githubUser -}}
+{{- $ghData := dict "repos" 0 "stars" 0 "followers" 0 "joined" "" -}}
+{{- if $ghUser -}}
+  {{- $token := "" -}}
+  {{- $userUrl := printf "https://api.github.com/users/%s" $ghUser -}}
+  {{- $reposUrl := printf "https://api.github.com/users/%s/repos?per_page=100" $ghUser -}}
+  {{- $userRes := resources.GetRemote $userUrl (dict "headers" (dict "Authorization" (printf "Bearer %s" $token))) -}}
+  {{- if $userRes -}}
+    {{- $user := transform.Unmarshal $userRes -}}
+    {{- $reposRes := resources.GetRemote $reposUrl (dict "headers" (dict "Authorization" (printf "Bearer %s" $token))) -}}
+    {{- $stars := 0 -}}
+    {{- if $reposRes -}}
+      {{- $repos := transform.Unmarshal $reposRes -}}
+      {{- range $repos -}}
+        {{- $stars = add $stars .stargazers_count -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $joinedStr := "" -}}
+    {{- with $user.created_at -}}
+      {{- $t := time.AsTime . -}}
+      {{- $joinedStr = $t.Format "2006年1月2日" -}}
+    {{- end -}}
+    {{- $ghData = dict "repos" $user.public_repos "stars" $stars "followers" $user.followers "joined" $joinedStr -}}
+  {{- end -}}
+{{- end -}}
+
 <section class="neofetch">
   <div class="neofetch__window">
     <div class="neofetch__titlebar">
@@ -15,12 +42,21 @@
           <span class="prompt">&gt;</span> {{ hugo.Data.profile.name }}@blog
         </div>
         <div class="neofetch__separator typewriter-line">─────────────────────</div>
-        {{ range hugo.Data.profile.info }}
-        <div class="neofetch__line typewriter-line">
+        {{- range hugo.Data.profile.info -}}
+        {{- $val := .value -}}
+        {{- if and .source (eq .source "github") -}}
+          {{- $lower := .key | lower -}}
+          {{- if eq $lower "repos" -}}{{- $val = $ghData.repos | string -}}
+          {{- else if eq $lower "stars" -}}{{- $val = $ghData.stars | string -}}
+          {{- else if eq $lower "followers" -}}{{- $val = $ghData.followers | string -}}
+          {{- else if eq $lower "joined" -}}{{- $val = $ghData.joined -}}
+          {{- end -}}
+        {{- end -}}
+        <div class="neofetch__line typewriter-line" data-key="{{ .key | urlize }}">
           <span class="neofetch__key">{{ .key }}:</span>
-          <span class="neofetch__value">{{ .value }}</span>
+          <span class="neofetch__value"{{ if .source }} data-source="{{ .source }}"{{ end }}>{{ $val }}</span>
         </div>
-        {{ end }}
+        {{- end }}
         <div class="neofetch__separator typewriter-line">─────────────────────</div>
         <div class="neofetch__colors typewriter-line">
           {{ range hugo.Data.profile.colors }}
@@ -31,3 +67,52 @@
     </div>
   </div>
 </section>
+
+<script>
+(function() {
+  var buildData = {{ $ghData | jsonify }};
+  var githubUser = '{{ $ghUser }}';
+  if (!githubUser) return;
+
+  function updateUI(data) {
+    var map = { repos: 'Repos', stars: 'Stars', followers: 'Followers', joined: 'Joined' };
+    Object.entries(data).forEach(function(_ref) {
+      var key = _ref[0], value = _ref[1];
+      var el = document.querySelector('[data-key="' + map[key] + '"] .neofetch__value[data-source="github"]');
+      if (el) el.textContent = value;
+    });
+  }
+
+  // 优先用本地缓存（可能比构建时更新）
+  try {
+    var cached = JSON.parse(localStorage.getItem('gh_cache'));
+    if (cached && Date.now() - cached.ts < 3600000) {
+      updateUI(cached.data);
+      return;
+    }
+  } catch (_) {}
+
+  // 缓存过期时，从 API 获取最新数据并更新
+  var headers = {};
+  var token = '';
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  fetch('https://api.github.com/users/' + githubUser, { headers: headers })
+    .then(function(r) { if (!r.ok) throw Error(); return r.json(); })
+    .then(function(user) {
+      return fetch('https://api.github.com/users/' + githubUser + '/repos?per_page=100', { headers: headers })
+        .then(function(r) { if (!r.ok) throw Error(); return r.json(); })
+        .then(function(repos) {
+          var stars = repos.reduce(function(sum, r) { return sum + r.stargazers_count; }, 0);
+          var data = {
+            repos: user.public_repos,
+            stars: stars,
+            followers: user.followers,
+            joined: new Date(user.created_at).toLocaleDateString('zh-CN', { year: 'numeric', month: 'short', day: 'numeric' })
+          };
+          updateUI(data);
+          try { localStorage.setItem('gh_cache', JSON.stringify({ data: data, ts: Date.now() })); } catch(_) {}
+        });
+    })
+    .catch(function(e) { console.warn('[neofetch] GitHub API error:', e); });
+})();
+</script>

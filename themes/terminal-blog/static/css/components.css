@@ -383,6 +383,33 @@ pre {
 .music-card {
   text-align: center;
   padding: var(--space-xl);
+  cursor: pointer;
+  position: relative;
+}
+
+.music-card--active {
+  border-color: var(--color-terminal);
+  box-shadow: 0 0 15px var(--color-terminal-glow);
+}
+
+.music-card--active .music-card__title {
+  color: var(--color-terminal);
+}
+
+.music-card__play {
+  display: none;
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  width: 0;
+  height: 0;
+  border-left: 8px solid var(--color-terminal);
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+}
+
+.music-card--active .music-card__play {
+  display: block;
 }
 
 .music-card__icon {
@@ -393,6 +420,7 @@ pre {
 .music-card__title {
   font-size: var(--text-base);
   margin-bottom: var(--space-xs);
+  transition: color var(--duration-fast);
 }
 
 .music-card__desc {
@@ -404,8 +432,26 @@ pre {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   overflow: hidden;
-  padding: var(--space-md);
   background: var(--bg-secondary);
+}
+
+.music-player__header {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.music-player__header .prompt {
+  font-size: var(--text-xs);
+}
+
+.music-player__embed {
+  min-height: 80px;
 }
 
 /* 个人空间 - 时间线 */
