@@ -1,7 +1,5 @@
-# 个人博客项目分析文档
+# 个人博客
 
-> 分析日期：2026-05-18  
-> 项目路径：`C:\Users\86198\Desktop\个人博客`  
 > 作者：老蒋（jianghuaqi85-sys）  
 > 域名：https://laojiang666.cn
 
